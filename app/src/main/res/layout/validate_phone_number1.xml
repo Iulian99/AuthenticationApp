@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1.Please enter your phone number. It will be used for registration in the 24pay app."
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textInputLayoutPrefix"/>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutPrefix"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="wrap_content"
+        android:hint="Prefix"
+        app:expandedHintEnabled="false"
+        app:layout_constraintWidth_percent="0.7"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white"
+        app:boxStrokeColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+        <AutoCompleteTextView
+            android:id="@+id/auto_complete_txt"
+            android:hint="+40"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputPhoneBrand"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Phone no."
+        android:layout_marginStart="10dp"
+        android:textColorHint="@color/white"
+        app:boxStrokeColor="@color/gray"
+        app:expandedHintEnabled="false"
+        app:hintAnimationEnabled="true"
+        app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutPrefix"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textInputLayoutPrefix"
+        app:layout_constraintTop_toTopOf="@+id/textInputLayoutPrefix">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/phoneBrandTextInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="7XX XXX XXX"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "70232295431",
+    "firebase_url": "https://pay-c8a9c-default-rtdb.firebaseio.com",
+    "project_id": "pay-c8a9c",
+    "storage_bucket": "pay-c8a9c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70232295431:android:da383477cdaaa70a4202a2",
+        "android_client_info": {
+          "package_name": "com.example.a24pay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt8yKy5n1M0d-lzHZiKXKBWRtyTMLg7fc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70232295431:android:8f5d1904b36a167e4202a2",
+        "android_client_info": {
+          "package_name": "com.example.biometricapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt8yKy5n1M0d-lzHZiKXKBWRtyTMLg7fc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

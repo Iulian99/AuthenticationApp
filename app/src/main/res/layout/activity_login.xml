@@ -40,25 +40,37 @@
             app:layout_constraintStart_toStartOf="@+id/rectangle"
             app:layout_constraintTop_toTopOf="@+id/rectangle" />
 
-        <ImageView
-            android:id="@+id/imageViewPassword"
-            android:layout_width="match_parent"
+        <!--        <ImageView-->
+<!--            android:id="@+id/imageViewPassword"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/icon_pin_code"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/titleTextView" />-->
+
+        <include
+            android:id="@+id/customLayout"
+            layout="@layout/password_items"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_pin_code"
+            android:layout_marginTop="30dp"
             app:layout_constraintEnd_toEndOf="parent"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
             android:text="Forgot PIN code"
             android:textColor="@color/yellow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewPassword" />
+            app:layout_constraintTop_toBottomOf="@+id/customLayout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Cercul -->
@@ -172,7 +184,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:text="0721 10 24 24"
+            android:text="0753 30 01 51"
             android:textAlignment="center"
             android:textColor="@color/yellow"
             app:layout_constraintStart_toEndOf="@+id/textView5"
@@ -182,6 +194,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
+        android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

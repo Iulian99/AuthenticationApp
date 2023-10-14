@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.biometricapp"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -49,4 +49,6 @@ dependencies {
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth")
+// Biometric Amprenta
+    implementation("androidx.biometric:biometric:1.1.0")
 }

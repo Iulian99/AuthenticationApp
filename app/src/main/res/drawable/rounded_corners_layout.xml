@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="16dp" />
-            <solid android:color="@color/black1" /> <!-- Setează culoarea de fundal aici -->
+            <solid android:color="@color/darkBlue" /> <!-- Setează culoarea de fundal aici -->
         </shape>
     </item>
 </selector>

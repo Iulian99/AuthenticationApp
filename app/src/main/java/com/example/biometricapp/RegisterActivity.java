@@ -4,6 +4,7 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -13,6 +14,8 @@ import androidx.core.content.res.ResourcesCompat;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -27,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.window.OnBackInvokedDispatcher;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -60,13 +64,16 @@ public class RegisterActivity extends AppCompatActivity implements RegisterUser 
     private EditText codeEditText;
     private TextInputLayout textInputLayout;
     private StepView stepView;
-    private int current_state = 0;
+    private int current_state = 1;
     private Button btn_next_step;
     private List<Integer> listCustomLayout;
     private ConstraintLayout constraintLayout;
-    TextInputEditText textInputEditText;
     FirebaseAuth mAuth;
     String verificationID1;
+
+    private EditText codeTextInputPINcode,codeTextInputPINcodeRetype;
+    Boolean isVerified = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,16 +86,76 @@ public class RegisterActivity extends AppCompatActivity implements RegisterUser 
         phoneEditText = findViewById(R.id.phoneBrandTextInput);
         codeEditText = findViewById(R.id.codeBrandTextInputCode);
 
+        codeTextInputPINcode = findViewById(R.id.codeTextInputPINcode);
+        codeTextInputPINcodeRetype = findViewById(R.id.codeTextInputPINcodeRetype);
+
         stepView = findViewById(R.id.step_view);
 
-
-        listOfPrefix();
-
+//validate_phone_number1.....2.....3 - i dont use
+        listOfLayout();
+//design
         focusEditText(phoneEditText);
 
-
+//"+40","+93","+355"
         itemsListPrefix();
+//partea de sus 1-2-3
+        setStepView(stepView);
+//Butonul de back was pressed
+        goBack();
 
+//Button next
+        btn_next_step.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                try {
+                    System.out.println("current_state -----> " + current_state);
+                        if(current_state==1){
+                            String text = phoneEditText.getText().toString();
+                            stepView.go(current_state, true);//activam butonul de NEXT STEP
+                            System.out.println("Current_State =" + current_state);
+                            verifyEditTextPhone(text); //good
+                            System.out.println("Current_State =" + current_state);
+//                            nextIncludedLayout();// muta stepView cu +1
+
+//                        verifycode();
+                        }else if(current_state==2){
+                            System.out.println("Current_State =" + current_state);
+                            verifyEditTextCode();
+                            System.out.println("Current_State =" + current_state);
+                        }else if(current_state==3){
+                            System.out.println("Se compara codeTextInputPinCode cu codeTextInputPINcodeRetype");
+                            System.out.println("Current_State =" + current_state);
+                            comparePINCode(codeTextInputPINcode,codeTextInputPINcodeRetype);
+                            System.out.println("Current_State =" + current_state);
+                        }
+//                        if(current_state==3){
+//                            comparePINCode(codeTextInputPINcode,codeTextInputPINcodeRetype);
+//                        }
+                    // restul codului
+                } catch (NullPointerException e) {
+                    Toast.makeText(RegisterActivity.this, "An error occurred!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+//        textInputEditText = findViewById(R.id.phoneBrandTextInput); = phoneEditText
+        String phoneNumber = phoneEditText.getText().toString();
+        mAuth = FirebaseAuth.getInstance();
+    }
+
+    private void goBack() {
+        OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Toast.makeText(RegisterActivity.this, "Back Button was pressed", Toast.LENGTH_SHORT).show();
+                System.out.println("Back Button was pressed");
+                previousIncludedLayout();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
+    }
+
+    private void setStepView(StepView stepView) {
         stepView.getState()
                 .selectedTextColor(ContextCompat.getColor(this, R.color.darkBlue))
                 .animationType(StepView.ANIMATION_CIRCLE)
@@ -103,68 +170,44 @@ public class RegisterActivity extends AppCompatActivity implements RegisterUser 
                 .stepLineWidth(5)
                 .stepNumberTextSize(60)
                 .commit();
-
-
-
-        btn_next_step.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                try {
-                    String text = phoneEditText.getText().toString();
-
-                    if(!text.isEmpty() && text.length()==9){
-                        if(current_state<2){
-                            current_state++;
-                            stepView.go(current_state, true);//activam butonul de NEXT STEP
-
-                            if(TextUtils.isEmpty(text)){
-                                Toast.makeText(RegisterActivity.this, "Enter valid phone number", Toast.LENGTH_SHORT).show();
-                                System.out.println("Enter valid phone number");
-                            }else{
-                                Toast.makeText(RegisterActivity.this, "GOOD phone number", Toast.LENGTH_SHORT).show();
-                                String number = text;
-                                System.out.println("GOOD phone number");
-                                sendVerificationCode(number);
-                                nextIncludedLayout();
-                                String smsCode = codeEditText.getText().toString();
-                                if(!smsCode.isEmpty() && smsCode.length()==6){
-                                    if(TextUtils.isEmpty(text)){
-                                        Toast.makeText(RegisterActivity.this, "Enter valid code number", Toast.LENGTH_SHORT).show();
-                                        System.out.println("Enter valid code number");
-                                    }else{
-                                        Toast.makeText(RegisterActivity.this, "GOOD code number", Toast.LENGTH_SHORT).show();
-                                        System.out.println("GOOD code number");
-                                        verifyCode(smsCode);
-                                    }
-//                                    nextIncludedLayout();
-                                }else{
-                                    Toast.makeText(RegisterActivity.this, "Please enter your code number", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-//                        verifycode();
-                        }
-
-                    }
-
-
-                    // restul codului
-                } catch (NullPointerException e) {
-                    Toast.makeText(RegisterActivity.this, "An error occurred!", Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-        });
-
-//        textInputEditText = findViewById(R.id.phoneBrandTextInput); = phoneEditText
-        String phoneNumber = phoneEditText.getText().toString();
-        mAuth = FirebaseAuth.getInstance();
-
-
     }
 
+    private void comparePINCode(EditText codeTextInputPINcode,EditText codeTextInputPINcodeRetype) {
+
+        codeTextInputPINcode = findViewById(R.id.codeTextInputPINcode);
+        codeTextInputPINcodeRetype = findViewById(R.id.codeTextInputPINcodeRetype);
+
+        if(codeTextInputPINcode.getText().toString().equals(codeTextInputPINcodeRetype.getText().toString())){
+//            Toast.makeText(RegisterActivity.this, "Login Succesfull", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+        }
+    }
+
+    private void verifyEditTextPhone(String text) {
+        System.out.println("Textul este =="+ text);
+        if(text.length() == 9){
+            current_state++;
+//            Toast.makeText(RegisterActivity.this, "GOOD phone number", Toast.LENGTH_SHORT).show();
+            String number = text;
+            sendVerificationCode(number);
+            nextIncludedLayout();
+        }
+    }
+    private void verifyEditTextCode(){
+        codeEditText = findViewById(R.id.codeBrandTextInputCode);
+        String smsCode = codeEditText.getText().toString();
+        System.out.println("smsCode = "+ smsCode);
+        if(smsCode.length() == 6){
+            current_state++;
+//            Toast.makeText(RegisterActivity.this, "GOOD code number", Toast.LENGTH_SHORT).show();
+            System.out.println("GOOD code number");
+            nextIncludedLayout();
+//            verifyCode(smsCode);
+
+        }else{
+            Toast.makeText(RegisterActivity.this, "Please enter your code number", Toast.LENGTH_SHORT).show();
+        }
+    }
     private void sendVerificationCode(String phoneNumber) {
         System.out.println("sendVerificationCode()");
         System.out.println("Number Phone = +40"+phoneNumber);
@@ -198,34 +241,67 @@ public class RegisterActivity extends AppCompatActivity implements RegisterUser 
         });
     }
 
-    public void listOfPrefix(){
+    public void listOfLayout(){
         listCustomLayout = new ArrayList<>();
         listCustomLayout.add(R.layout.validate_phone_number1);
         listCustomLayout.add(R.layout.provide_sms_code2);
+        listCustomLayout.add(R.layout.provide_pin_code3);
     }
 
+//    cele 3 Layout-uri PHONE SMS PIN
     private void nextIncludedLayout() {
 //        go to next Layout
         constraintLayout = findViewById(R.id.constraintLayoutInclude);
         constraintLayout.removeAllViews(); // înlăturăm orice view existent în container
         // Încarcă noul layout pe care vrei să-l afișezi în container
         LayoutInflater inflater = LayoutInflater.from(this);
-        View newLayout = inflater.inflate(R.layout.provide_sms_code2, constraintLayout, false);
+        View newLayout = null;
+        if(current_state==1){
+            newLayout = inflater.inflate(R.layout.validate_phone_number1, constraintLayout, false);
+        }else if(current_state==2){
+            newLayout = inflater.inflate(R.layout.provide_sms_code2, constraintLayout, false);
+        }else if(current_state==3){
+            newLayout = inflater.inflate(R.layout.provide_pin_code3, constraintLayout, false);
+        }
         // Adăugăm noul layout în container
         constraintLayout.addView(newLayout);
+
+        phoneEditText = findViewById(R.id.phoneBrandTextInput);
+        codeEditText = findViewById(R.id.codeBrandTextInputCode);
     }
+
 
     private void previousIncludedLayout() {
 //        go to previous Layout
-        constraintLayout = findViewById(R.id.constraintLayoutInclude);
-        constraintLayout.removeAllViews(); // înlăturăm orice view existent în container
-        // Încarcă noul layout pe care vrei să-l afișezi în container
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View newLayout = inflater.inflate(R.layout.validate_phone_number1, constraintLayout, false);
-        // Adăugăm noul layout în container
-        constraintLayout.addView(newLayout);
+        if(current_state>1){
+            constraintLayout = findViewById(R.id.constraintLayoutInclude);
+            constraintLayout.removeAllViews(); // înlăturăm orice view existent în container
+            // Încarcă noul layout pe care vrei să-l afișezi în container
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View newLayout = null;
+            System.out.println("CURRENT STATE = "+current_state);
+            if(current_state==3){
+                System.out.println("Current state a fost "+current_state);
+                current_state--;
+                System.out.println("Current state este "+current_state);
+                newLayout = inflater.inflate(R.layout.provide_sms_code2, constraintLayout, false);
+            }else if (current_state==2){
+                System.out.println("Current state a fost "+current_state);
+                current_state--;
+                System.out.println("Current state este "+current_state);
+                newLayout = inflater.inflate(R.layout.validate_phone_number1, constraintLayout, false);
+            }
+
+            // Adăugăm noul layout în container
+            constraintLayout.addView(newLayout);
+        }else{
+//            se foloseste cand suntem in primul constraint layout - validate_phone_number1
+            finish();
+        }
+
     }
 
+//
     @Override
     public void login(String phoneNumber) {
         System.out.println("sendVerificationCode()");
@@ -250,6 +326,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterUser 
 
     @Override
     public boolean isAuthenticated() {
+//        isVerified = true;
         return false;
     }
 
@@ -268,7 +345,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterUser 
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
-            Toast.makeText(RegisterActivity.this, "Verification Failed", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(RegisterActivity.this, "onVerificationFailed", Toast.LENGTH_SHORT).show();
             if (e instanceof FirebaseAuthInvalidCredentialsException) {
                 // Invalid request
             } else if (e instanceof FirebaseTooManyRequestsException) {
@@ -282,7 +359,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterUser 
         @Override
         public void onCodeSent(@NonNull String verificationId,
                 @NonNull PhoneAuthProvider.ForceResendingToken token) {
-            Toast.makeText(RegisterActivity.this, "Code was sent", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(RegisterActivity.this, "Code was sent", Toast.LENGTH_SHORT).show();
             super.onCodeSent(verificationId,token);
             verificationID1 = verificationId;
         }
@@ -302,8 +379,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterUser 
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(RegisterActivity.this, "Login Succesfull", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+                            isVerified = true;
                         }
                     }
                 });

@@ -9,4 +9,5 @@
     <color name="orange">#FF9800</color>
     <color name="red">#FF0000</color>
     <color name="red_autumn">#325FB8</color>
+    <color name="transparent">#00000000</color>
 </resources>

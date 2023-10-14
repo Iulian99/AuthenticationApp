@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
 
     <application
         android:allowBackup="true"
@@ -16,11 +18,6 @@
         android:theme="@style/Theme.BiometricApp"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity2"
-            android:exported="false" >
-
-        </activity>
-        <activity
             android:name=".RegisterActivity"
             android:exported="true">
             <intent-filter>
@@ -29,13 +26,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:exported="false"></activity>
+            android:exported="false">
+
+
+
+        </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="false"></activity>
+            android:exported="false">
+
+        </activity>
     </application>
 
 </manifest>
